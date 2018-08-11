@@ -152,9 +152,52 @@ let test_decode_rle =
   |> assert_equal ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
 ;;
 
-let decode_rle_reverse_encode_rlt = 
+let test_decode_rle_reverse_encode_rlt = 
   let lst = [1; 1; 2; 2; 2; 1; 2; 1]
   in let encoded = encode_rle lst
   in decode_rle encoded 
      |> assert_equal lst
+;;
+
+let test_duplicate =
+  duplicate ["a";"b";"c";"c";"d"]
+  |> assert_equal ["a"; "a"; "b"; "b"; "c"; "c"; "c"; "c"; "d"; "d"]
+;;
+
+let test_duplicate_empty_list_return_empty_list = 
+  duplicate []
+  |> assert_equal []
+;;
+
+let test_replicate = 
+  replicate ["a";"b";"c"] 3
+  |> assert_equal ["a"; "a"; "a"; "b"; "b"; "b"; "c"; "c"; "c"]
+;;
+
+let test_replicate_empty_list_return_empty_list = 
+  replicate [] 100
+  |> assert_equal []
+;;
+
+let test_drop = 
+  drop ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 3
+  |> assert_equal ["a"; "b"; "d"; "e"; "g"; "h"; "j"]
+;;
+
+let test_drop_index_out_of_range_return_same_list =
+  let lst = [1; 2; 3]
+  in drop lst 10 |> assert_equal lst
+;;
+
+let test_drop_empty_list_return_empty_list = 
+  drop [] 1 |> assert_equal []
+;;
+
+let test_drop_index_equal_1_return_empty_list = 
+  drop [1; 2; 3; 4; 5] 1 |> assert_equal []
+;;
+
+let test_drop_index_lesser_or_equal_to_0_raises_error = 
+  assert_raises (Failure "Index <= 0") (fun () -> drop [1; 2] 0);
+  assert_raises (Failure "Index <= 0") (fun () -> drop [1; 2] (-12))
 ;;

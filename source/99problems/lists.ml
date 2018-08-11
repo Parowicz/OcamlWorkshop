@@ -100,8 +100,8 @@ If given list is empty, both elements of tuple will be empty.
 *)
 let split_when f lst = 
   let rec aux acc = function
-    |[] -> (acc, [])
-    |x :: xs as all -> if f x then aux (acc @ [x]) xs
+    |[] -> (reverse acc, [])
+    |x :: xs as all -> if f x then aux (x :: acc) xs
                 else (acc, all)
   in aux [] lst
 ;;
@@ -183,4 +183,34 @@ let decode_rle lst =
     |Single(element) :: xs -> aux (element :: acc) xs
     |Multiple(count, element) :: xs -> aux (repeat count element @ acc) xs
   in aux [] lst
+;;
+
+(* Problem 13 - from my understanding decode_rle fits requirements *)
+
+(** Problem 14
+@return list with each element duplicated. 
+*)
+let duplicate lst = List.fold_left (fun acc a -> acc @ repeat 2 a) [] lst;;
+
+(** Problem 15
+@param n defines how many times each element has to be replicated.
+@return list with each element replicated n times.
+*)
+let replicate lst n = List.fold_left (fun acc a -> acc @ repeat n a) [] lst;;
+
+(** Problem 16
+@param n dropping step.
+@return list without elements that index mod n is equal 0. 
+  If n is equal to one, empty list will be returned. 
+  If n is greater than list length same list as passed will be returned.
+@raise Failure "Index <= 0" when n is lesser or equal to 0.
+*)
+let drop lst n = 
+  if n <= 0 then failwith "Index <= 0" else
+  let rec aux index acc accl = 
+    match index mod n, acc with
+    |(_, []) -> List.rev accl
+    |(0, _ :: xs) -> aux (index + 1) xs accl
+    |(_, x :: xs) -> aux (index + 1) xs (x :: accl)
+  in aux 1 lst []
 ;;
