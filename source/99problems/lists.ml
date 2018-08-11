@@ -56,7 +56,7 @@ let reverse lst =
 ;;
 
 (** Problem 6
-  @return True if list is a palindrome, false otherwise.
+  @return true if list is a palindrome, false otherwise.
 *)
 let is_palindrome lst = lst = (reverse lst)
 ;;
@@ -82,7 +82,7 @@ let rec flatten = function
 
 (** Problem 8
   Eliminate consecutive duplicates of list elements.
-  @return New list, without consecutive duplicates.
+  @return new list, without consecutive duplicates.
 *)
 let rec compress = function
   |x1 :: (x2 :: _ as rest) -> 
@@ -95,7 +95,7 @@ let rec compress = function
 Split given list at the momemnt when given condition is not matched. 
 
 @param f Condition, point where this condition return false is split point.
-@return Tuple with list of consecutive maches with f as first element and rest as second.
+@return tuple with list of consecutive maches with f as first element and rest as second.
 If given list is empty, both elements of tuple will be empty. 
 *)
 let split_when f lst = 
@@ -123,7 +123,7 @@ let rec pack = function
 Run-length encoding of a list. Consecutive elements are encoded as tuple with 
 (number of occcourences, element). 
 
-@return List of tuples with (number of occcourences as int, 'a element)
+@return list of tuples with (number of occcourences as int, 'a element)
 *)
 let rec encode = function
   |[] -> []
@@ -137,4 +137,50 @@ let rec encode = function
     Previously List.map (fun x -> (List.length x, List.hd x)) was used. 
     Thous this version is more efficient
     *)
+;;
+
+(**
+  This type represents run-length encoding segment.
+*)
+type 'a rle = 
+  |Single of 'a (** Single element *)
+  |Multiple of int * 'a (** Repeated element, tuple with (number of repetitions, element) *)
+;;
+
+(** Problem 11
+Run-length encoding to rle list.
+
+@return encoded list.
+*)
+let encode_rle lst = 
+  encode lst 
+  |> List.map (function (1, x) -> Single(x) | (n, x) -> Multiple(n, x))
+;;
+
+(**
+Create list by repeating given element n times.
+
+@param number of repetitions
+@param element to repeat
+@return list with element repeated n times.
+*)
+let repeat number element = 
+  let rec aux acc = function
+      |n when n < 0 -> failwith "Negative number passed as number of repeats"
+      |0 -> acc
+      |n -> aux (element :: acc) (n - 1)
+  in aux [] number
+;;
+
+(** Problem 12
+Decode list of 'a rle elements into list of 'a elements.
+
+@return decoded list.
+*)
+let decode_rle lst = 
+  let rec aux acc = function
+    |[] -> reverse acc
+    |Single(element) :: xs -> aux (element :: acc) xs
+    |Multiple(count, element) :: xs -> aux (repeat count element @ acc) xs
+  in aux [] lst
 ;;

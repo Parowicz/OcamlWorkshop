@@ -120,3 +120,41 @@ let test_flatten_empty_list_return_empty_list =
   flatten []
   |> assert_equal []
 ;;
+
+let test_encode_rle = 
+  encode_rle ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"]
+  |> assert_equal [Multiple (4, "a"); Single "b"; Multiple (2, "c"); Multiple (2, "a"); Single "d";
+                   Multiple (4, "e")]
+;;
+
+let test_encode_rlt_empty_list_return_empty_list = 
+  encode_rle []
+  |> assert_equal []
+;;
+
+let test_repeat = 
+  repeat 5 'R'
+  |> assert_equal ['R'; 'R'; 'R'; 'R'; 'R']
+;;
+
+let test_repeat_zero_times_return_empty_list = 
+  repeat 0 'R'
+  |> assert_equal []
+;;
+
+let test_repeat_negative_n_raise_error = 
+  assert_raises (Failure "Negative number passed as number of repeats") (fun () -> repeat (-1) 'R')
+;;
+
+let test_decode_rle = 
+  decode_rle [Multiple (4,"a"); Single "b"; Multiple (2,"c"); 
+              Multiple (2,"a"); Single "d"; Multiple (4,"e")]
+  |> assert_equal ["a"; "a"; "a"; "a"; "b"; "c"; "c"; "a"; "a"; "d"; "e"; "e"; "e"; "e"]
+;;
+
+let decode_rle_reverse_encode_rlt = 
+  let lst = [1; 1; 2; 2; 2; 1; 2; 1]
+  in let encoded = encode_rle lst
+  in decode_rle encoded 
+     |> assert_equal lst
+;;
