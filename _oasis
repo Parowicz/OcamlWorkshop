@@ -25,3 +25,13 @@ Test "test_99problems_lists"
     TestTools: test_99problems_lists
     Command: $test_99problems_lists
     WorkingDirectory: tests
+
+AlphaFeatures: ocamlbuild_more_args
+Document "99problems_reference"
+    Type: ocamlbuild 
+    BuildTools: ocamldoc
+
+    Title: Reference for 99 problems
+    XOCamlbuildPath: .
+    XOCamlbuildExtraArgs: "-docflags '-colorize-code -short-functors -keep-code'"
+    XOCamlbuildLibraries: 99problems

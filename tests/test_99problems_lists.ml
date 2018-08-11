@@ -50,18 +50,18 @@ let test_reverse =
   |> assert_equal [3; 2; 1]
 ;;
 
-let test_is_polindrome_empty_list_return_true = 
-  is_polindrome []
+let test_is_palindrome_empty_list_return_true = 
+  is_palindrome []
   |> assert_bool "False returned"
 ;;
 
-let test_is_polindrome = 
-  is_polindrome [ "x" ; "a" ; "m" ; "a" ; "x" ]
+let test_is_palindrome = 
+  is_palindrome [ "x" ; "a" ; "m" ; "a" ; "x" ]
   |> assert_bool "False returned"
 ;;
 
-let test_is_polindome_false = 
-  not (is_polindrome [ "a" ; "b" ])
+let test_is_palindome_false = 
+  not (is_palindrome [ "a" ; "b" ])
   |> assert_bool "True returned"
 ;;
 
@@ -104,6 +104,11 @@ let test_pack_empty_list_return_empty_list =
 let test_encode = 
   encode ["a";"a";"a";"a";"b";"c";"c";"a";"a";"d";"e";"e";"e";"e"]
   |> assert_equal [(4, "a"); (1, "b"); (2, "c"); (2, "a"); (1, "d"); (4, "e")]
+;;
+
+let test_endoce_empty_list_return_empty_list = 
+  encode []
+  |> assert_equal []
 ;;
 
 let test_flatten = 
