@@ -77,7 +77,7 @@ type 'a node =
 let rec flatten = function
   |[] -> []
   |One(element) :: xs -> element :: flatten xs
-  |Many(elements) :: xs -> flatten elements @ flatten xs
+  |Many(elements) :: xs -> flatten (elements @ xs) 
 ;;
 
 (** Problem 8

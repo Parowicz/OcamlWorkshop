@@ -112,8 +112,14 @@ let test_endoce_empty_list_return_empty_list =
 ;;
 
 let test_flatten = 
-  flatten [ One "a" ; Many [ One "b" ; Many [ One "c" ; One "d" ] ; One "e" ] ]
+  flatten [ One "a"; Many [ One "b"; Many [ One "c"; One "d" ]; One "e" ]]
   |> assert_equal ["a"; "b"; "c"; "d"; "e"]
+;;
+
+let test_flatten2 = 
+  flatten [ One "a"; Many [ One "b"; Many [ One "c"; Many [ One "c"; One "d" ]];
+            One "e" ]; Many [ One "c"; Many [ One "c"; Many [ One "c"; One "d" ]]]]
+  |> assert_equal ["a"; "b"; "c"; "c"; "d"; "e"; "c"; "c"; "c"; "d"]
 ;;
 
 let test_flatten_empty_list_return_empty_list = 
