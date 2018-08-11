@@ -190,14 +190,23 @@ let decode_rle lst =
 (** Problem 14
 @return list with each element duplicated. 
 *)
-let duplicate lst = List.fold_left (fun acc a -> repeat 2 a @ acc) [] lst |> reverse
+let duplicate lst = 
+  let rec aux acc = function
+    |[] -> reverse acc
+    |x :: xs -> aux (x :: x :: acc) xs
+  in aux [] lst
 ;;
 
 (** Problem 15
 @param n defines how many times each element has to be replicated.
 @return list with each element replicated n times.
 *)
-let replicate lst n = List.fold_left (fun acc a -> repeat n a @ acc) [] lst |> reverse
+let replicate lst n = 
+  let rec aux acc a = function
+  |[] -> reverse acc
+  |x :: xs as l -> if a = 0 then aux acc n xs
+                   else aux (x :: acc) (a - 1) l 
+  in aux [] n lst 
 ;;
 
 (** Problem 16
