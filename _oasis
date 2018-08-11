@@ -1,0 +1,27 @@
+Name: OcamlWorkshop
+Version: 0.0
+Synopsis: Storage for Ocaml problems
+Authors: A. Parowicz
+License: GPL
+
+# Description: .
+
+OASISFormat: 0.4
+BuildTools: ocamlbuild
+Plugins: META (0.4), DevFiles (0.4)
+
+Library "99problems"
+    Path: source/99problems
+    Modules: Lists
+
+Executable "test_99problems_lists"
+    Path: tests 
+    MainIs: test_99problems_lists.ml
+    CompiledObject: best
+    Install: false
+    BuildDepends: 99problems, oUnit
+
+Test "test_99problems_lists"
+    TestTools: test_99problems_lists
+    Command: $test_99problems_lists
+    WorkingDirectory: tests
