@@ -10,6 +10,22 @@ OASISFormat: 0.4
 BuildTools: ocamlbuild
 Plugins: META (0.4), DevFiles (0.4)
 
+Library "BinaryTree"
+    Path: source
+    Modules: BinaryTree
+
+Executable "test_trees"
+    Path: tests
+    MainIs: test_trees.ml
+    CompiledObject: best
+    Install: false
+    BuildDepends: BinaryTree, oUnit
+
+Test "test_trees"
+    TestTools: test_trees
+    Command: $test_trees
+    WorkingDirectory: tests
+
 Library "99problems"
     Path: source/99problems
     Modules: Lists
@@ -27,11 +43,11 @@ Test "test_99problems_lists"
     WorkingDirectory: tests
 
 AlphaFeatures: ocamlbuild_more_args
-Document "99problems_reference"
+Document "WorkshopReference"
     Type: ocamlbuild 
     BuildTools: ocamldoc
 
-    Title: Reference for 99 problems
+    Title: Workshop reference
     XOCamlbuildPath: .
     XOCamlbuildExtraArgs: "-docflags '-colorize-code -short-functors -keep-code'"
-    XOCamlbuildLibraries: 99problems
+    XOCamlbuildLibraries: 99problems, BinaryTree
