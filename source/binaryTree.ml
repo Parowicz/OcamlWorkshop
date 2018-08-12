@@ -53,10 +53,9 @@ module Make (Ord: OrderedType) = struct
   *)
   let rec append ele = function 
     |Empty -> Node(ele, Empty, Empty)
-    |Node(value, _, _) as node when value = ele -> node
     |Node(value, l, r) -> 
-      if Ord.compare ele value > 0 then Node(value,  l, append ele r)
-      else Node(value, append ele l, r)  
+      if Ord.compare ele value <= 0 then Node(value,  append ele l, r)
+      else Node(value, l, append ele r)  
   
   (** @param ele element to look for.
       @return true if tree contains given element.
@@ -67,4 +66,19 @@ module Make (Ord: OrderedType) = struct
     |Node(value, l, r) ->
       if Ord.compare ele value > 0 then contains ele r
       else contains ele l
+
+  (**
+    @return list of elements from tree flattens in left-right order.
+  *)
+  let rec flatten = function
+    |Empty -> []
+    |Node(value, l, r) -> flatten l @ value :: flatten r
+
+  (**
+    @param lst list of elements with types matches tree type.
+    @return sorted list.
+  *)
+  let sort lst = List.fold_right (fun tree ele -> append tree ele) lst empty 
+                 |> flatten
+  
 end
