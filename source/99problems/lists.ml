@@ -225,3 +225,46 @@ let drop lst n =
     |(_, x :: xs) -> aux (index + 1) xs (x :: accl)
   in aux 1 lst []
 ;;
+
+(** Problem 17
+Split a list into two parts
+
+@param n length of first part
+@return tuple with (first part, second part).
+  If n is out of list range tuple of (whole list, empty list) will be returned.
+*)
+let split lst n = 
+  let rec aux acc ctr accl = 
+    match ctr, accl with 
+    |(_, []) -> (reverse acc, [])
+    |(0, xs) -> (reverse acc, xs)
+    |(n, x :: xs) -> aux (x :: acc) (n - 1) xs
+  in aux [] n lst
+;;
+
+(** Problem 18
+@param start_i starting index.
+@param end_i ending index.
+@return sublist with all elements between start_i - end_i.
+    If start_i is lesser than 0 it will be treated as 0.
+    If end_i is larger than list length it will be treated as list length.
+*)
+let slice lst start_i end_i =
+  let rec aux acc i = function
+    |[] -> reverse acc
+    |_ when i > end_i + 1 -> reverse acc 
+    |x :: xs when i > start_i -> aux (x :: acc) (i + 1) xs
+    |_ :: xs -> aux acc (i + 1) xs
+  in aux [] 1 lst
+;;
+
+(** Problem 19
+@param n step 
+@return list rotated to left n times. 
+  If n is negative, then it will treated as length + n.
+*)
+let rotate lst n = 
+  let len = length lst
+  in let l, r = split lst (if n >= 0 then n else len + n)
+  in r @ l
+;;

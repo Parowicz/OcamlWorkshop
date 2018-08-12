@@ -207,3 +207,50 @@ let test_drop_index_lesser_or_equal_to_0_raises_error =
   assert_raises (Failure "Index <= 0") (fun () -> drop [1; 2] 0);
   assert_raises (Failure "Index <= 0") (fun () -> drop [1; 2] (-12))
 ;;
+
+let test_split = 
+  split ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 3
+  |> assert_equal (["a"; "b"; "c"], ["d"; "e"; "f"; "g"; "h"; "i"; "j"])
+;;
+
+let test_split_n_out_of_list_range_return_whole_list_and_empty_list = 
+  split ["a";"b";"c";"d"] 5
+  |> assert_equal (["a"; "b"; "c"; "d"], [])
+;;
+
+let test_slice = 
+  slice ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 2 6
+  |> assert_equal ["c"; "d"; "e"; "f"; "g"]
+;;
+
+let test_slice_end_index_out_of_list_range_return_elements_to_end_of_list = 
+  slice ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 3 1000
+  |> assert_equal ["d";"e";"f";"g";"h";"i";"j"]
+;;
+
+let test_slice_start_index_less_than_1_return_elements_from_start_of_list = 
+  let lst = ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"]
+  in slice lst 0 1000
+     |> assert_equal lst
+;;
+
+let test_slice_start_index_greater_than_end_index_return_empty_list = 
+    slice ["a";"b";"c";"d";"e";"f";"g";"h";"i";"j"] 10 2
+    |> assert_equal []
+;;
+
+let test_rotate = 
+  rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] 3
+  |> assert_equal ["d"; "e"; "f"; "g"; "h"; "a"; "b"; "c"]
+;;
+
+let test_rotate_negative_n_rotates_to_rigth = 
+  rotate ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"] (-2)
+  |> assert_equal ["g"; "h"; "a"; "b"; "c"; "d"; "e"; "f"]
+;;
+
+let test_rotate_index_same_as_list_len_return_same_list = 
+  let lst = ["a"; "b"; "c"; "d"; "e"; "f"; "g"; "h"]
+  in rotate lst (List.length lst)
+     |> assert_equal lst
+;;
