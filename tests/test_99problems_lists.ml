@@ -254,3 +254,50 @@ let test_rotate_index_same_as_list_len_return_same_list =
   in rotate lst (List.length lst)
      |> assert_equal lst
 ;;
+
+let test_remove_at = 
+  remove_at 1 ["a"; "b"; "c"; "d"]
+  |> assert_equal ["a"; "c"; "d"]
+;;
+
+let test_remove_at_index_out_of_range_return_same_list = 
+  let lst = [1; 2; 3; 4]
+  in remove_at 20 lst 
+     |> assert_equal lst
+;;
+
+let test_remove_at_index_less_than_0_return_same_list = 
+  let lst = [1; 2; 3; 4]
+  in remove_at (-20) lst 
+     |> assert_equal lst
+;;
+
+let test_insert_at = 
+  insert_at "alfa" 1 ["a";"b";"c";"d"]
+  |> assert_equal ["a"; "alfa"; "b"; "c"; "d"]
+;;
+
+let test_insert_at_element_out_of_range_append_last_element = 
+  insert_at "alfa" 100 ["a";"b";"c";"d"]
+  |> assert_equal ["a"; "b"; "c"; "d"; "alfa"]
+;;
+
+let test_insert_at_index_lesser_or_equal_to_0_append_first_element = 
+  insert_at "alfa" (-10) []
+  |> assert_equal ["alfa"]
+;;
+
+let test_range_ascending = 
+  range 4 9
+  |> assert_equal [4; 5; 6; 7; 8; 9]
+;;
+
+let test_range_descending = 
+  range 9 4
+  |> assert_equal [9; 8; 7; 6; 5; 4]
+;;
+
+let test_range_same_staring_and_ending_index_return_one_element_list = 
+  range 10 10
+  |> assert_equal [10]
+;;

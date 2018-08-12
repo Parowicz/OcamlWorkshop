@@ -268,3 +268,40 @@ let rotate lst n =
   in let l, r = split lst (if n >= 0 then n else len + n)
   in r @ l
 ;;
+
+(** Problem 20
+@param i index of element to remove.
+@return list without element at given index. 
+  If index is out of range of list, then same list is returned.
+*)
+let rec remove_at i = function
+  |[] -> []
+  |x :: xs -> if i = 0 then xs else x :: remove_at (i - 1) xs
+;;
+
+(** Problem 21
+@param i index where element will be inserted.
+@return list with element inserted at given index.
+  If index is out of range of the list, then element is inserted at the end.
+  If index is lesser of equal to 0 then first item is inserted at the start.
+*)
+let rec insert_at ele i = function
+  |[] -> [ele]
+  |x :: xs as all -> if i = 0 then ele :: all
+              else x :: insert_at ele (i - 1) xs
+;;
+
+(** Problem 22
+@param start_i starting index
+@param end_i ending index
+@return list with all elements in given range. 
+  If ending index is greater than starting, then range will have descending order.
+  If starting index and ending index are same then one-element list will be returned.
+*)
+let range start_i end_i = 
+  let rec aux acc istart iend = 
+    if istart = iend then acc 
+    else aux (istart :: acc) (istart + 1) iend
+  in if start_i > end_i then aux [] end_i (start_i + 1) 
+     else aux [] start_i (end_i + 1) |> reverse 
+;;
