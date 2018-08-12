@@ -128,9 +128,9 @@ Run-length encoding of a list. Consecutive elements are encoded as tuple with
 let rec encode = function
   |[] -> []
   |x :: _ as lst -> let rec aux e acc = function
-                        |[] -> (acc, [])
-                        |x :: xs as all -> if e = x then aux e (acc + 1) xs
-                                  else (acc, all)
+                      |[] -> (acc, [])
+                      |x :: xs as all -> if e = x then aux e (acc + 1) xs
+                                         else (acc, all)
                     in let  ctr, rest = aux x 0 lst
                     in (ctr, x) :: encode rest
   (* Note: that's an ugly solution, similar to pack. 
@@ -166,9 +166,9 @@ Create list by repeating given element n times.
 *)
 let repeat number element = 
   let rec aux acc = function
-      |n when n < 0 -> failwith "Negative number passed as number of repeats"
-      |0 -> acc
-      |n -> aux (element :: acc) (n - 1)
+    |n when n < 0 -> failwith "Negative number passed as number of repeats"
+    |0 -> acc
+    |n -> aux (element :: acc) (n - 1)
   in aux [] number
 ;;
 
@@ -203,9 +203,9 @@ let duplicate lst =
 *)
 let replicate lst n = 
   let rec aux acc a = function
-  |[] -> reverse acc
-  |x :: xs as l -> if a = 0 then aux acc n xs
-                   else aux (x :: acc) (a - 1) l 
+    |[] -> reverse acc
+    |x :: xs as l -> if a = 0 then aux acc n xs
+                     else aux (x :: acc) (a - 1) l 
   in aux [] n lst 
 ;;
 
