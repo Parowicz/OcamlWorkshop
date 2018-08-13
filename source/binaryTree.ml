@@ -74,12 +74,12 @@ module Make (Ord: OrderedType) = struct
   *)
   let rec flatten = function
     |Empty -> []
-    |Node(value, l, r) -> flatten l @ value :: flatten r
+    |Node(value, left, right) -> flatten left @ value :: flatten right
 
   (**
     @param lst list of elements with types matches tree type.
     @return sorted list.
   *)
-  let sort lst = List.fold_right (fun tree ele -> append tree ele) lst empty |> flatten
+  let sort lst = List.fold_right (fun tree element -> append tree element) lst empty |> flatten
 
 end
