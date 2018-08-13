@@ -74,3 +74,84 @@ let test_sort_with_duplicates =
 let test_sort_empty_list_return_empty_list = 
   T.sort [] |> assert_equal []
 ;;
+
+let test_from_list =
+  T.from_list [1l]
+  |> assert_equal (T.Node(1l, T.Empty, T.Empty));
+
+  T.from_list [3l; 2l; 5l]
+  |> assert_equal (T.Node(3l, T.Node(2l, T.Empty, T.Empty), T.Node(5l, T.Empty, T.Empty)));
+
+  T.from_list [10l; 11l; 12l]
+  |> assert_equal (T.Node(10l, T.Empty, T.Node(11l, T.Empty, T.Node(12l, T.Empty, T.Empty))))
+;;
+
+let test_from_list_empty_list_return_empty = 
+  T.from_list []
+  |> assert_equal T.Empty
+;;
+
+let test_max = 
+  T.max (T.Node(5l, T.Node(1l, T.Node(-2l, T.Empty, T.Empty),
+           T.Node(3l, T.Empty, T.Empty)), T.Empty))
+  |> assert_equal (Some(5l))
+;;
+
+let test_max_empty_tree_return_None = 
+  T.max T.Empty 
+  |> assert_equal None
+;;
+
+let test_max_of_list = 
+  T.from_list [1l; 2l; 3l; 10l; 2l; -10l; 15l; 11l]
+  |> T.max
+  |> assert_equal (Some(15l))
+;;
+
+let test_remove_max = 
+  T.remove_max (T.Node(2l, T.Empty, T.Node(5l, T.Empty, T.Empty)))
+  |> assert_equal (T.Node(2l, T.Empty, T.Empty));
+  
+  T.remove_max (T.Node(2l, T.Empty, T.Node(3l, T.Empty, T.Node(4l, T.Empty, T.Empty))))
+  |> assert_equal (T.Node(2l, T.Empty, T.Node(3l, T.Empty, T.Empty)))
+;;
+
+let test_remove_max_with_left_subnode_keep_subnode =
+  T.remove_max (T.Node(0l, T.Empty, T.Node(2l, T.Node(1l, T.Empty, T.Empty), T.Empty)))
+  |> assert_equal (T.Node(0l, T.Empty, T.Node(1l, T.Empty, T.Empty)))
+;;
+
+let test_remove_max_empty_tree_remove_empty_tree = 
+  T.remove_max T.Empty
+  |> assert_equal T.Empty
+;;
+
+let test_remove_element_signleton_return_empty_tree =
+  T.remove 21l (T.Node(21l, T.Empty, T.Empty))
+  |> assert_equal T.Empty
+;;
+
+let test_remove_last_subnode = 
+  T.remove 5l (T.Node(21l, T.Node(5l, T.Empty, T.Empty), T.Empty))
+  |> assert_equal (T.Node(21l, T.Empty, T.Empty));
+
+  T.remove 35l (T.Node(0l, T.Empty, T.Node(35l, T.Empty, T.Empty)))
+  |> assert_equal (T.Node(0l, T.Empty, T.Empty))
+;;
+
+let test_remove_root_balanced_tree_align_right = 
+  T.remove 0l (T.Node(0l, T.Node(-35l, T.Empty, T.Empty), T.Node(35l, T.Empty, T.Empty)))
+  |> assert_equal (T.Node(35l, T.Node(-35l, T.Empty, T.Empty), T.Empty))
+;;
+
+let test_remove_root_align_minimal = 
+  T.remove 0l (T.Node(0l, T.Node(-35l, T.Empty, T.Node(-25l, T.Empty, T.Empty)), 
+                T.Node(35l, T.Node(25l, T.Node(15l, T.Empty, T.Empty), T.Empty), T.Empty)))
+  |> assert_equal (T.Node(15l, T.Node(-35l, T.Empty, T.Node(-25l, T.Empty, T.Empty)), 
+                    T.Node(35l, T.Node(25l, T.Empty, T.Empty), T.Empty)))
+;;
+
+let test_remove_pull_right = 
+  T.remove 0l (T.Node(0l, T.Empty, T.Node(1l, T.Empty, T.Node(2l, T.Empty, T.Empty))))
+  |> assert_equal (T.Node(1l, T.Empty, T.Node(2l, T.Empty, T.Empty)))
+;;

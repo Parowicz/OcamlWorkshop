@@ -55,8 +55,45 @@ module Make (Ord: OrderedType) = struct
   let rec append element = function 
     |Empty -> Node(element, Empty, Empty)
     |Node(value, left, right) -> 
-      if Ord.compare element value <= 0 then Node(value,  append element left, right)
+      if Ord.compare element value <= 0 then Node(value, append element left, right)
       else Node(value, left, append element right)  
+  
+  (* ToDo: <docs> *)
+
+  let from_list lst = List.fold_left (fun acc a -> append a acc) empty lst
+
+  let rec max = function
+    |Empty -> None
+    |Node(value, _, Empty) -> Some(value)
+    |Node(_, _, right) -> max right
+  
+  let rec remove_max = function
+    |Empty -> Empty
+    |Node(_, left, Empty) -> left
+    |Node(value, left, right) -> Node(value, left, remove_max right)
+  
+  let rec min = function (* ToDo: tests *)
+    |Empty -> None 
+    |Node(value, Empty, _) -> Some(value)
+    |Node(_, left, _) -> min left
+  
+  let rec remove_min = function (* ToDo: tests *)
+    |Empty -> Empty
+    |Node(value, Empty, right) -> right
+    |Node(value, left, right) -> Node(value, remove_min left, right)
+
+  let rec remove element tree = 
+    match tree with 
+    |Empty -> Empty
+    |Node(value, left, Empty) when value = element -> left
+    |Node(value, l, r) when value = element 
+      -> (match min r with 
+          |None -> r
+          |Some(minimum) -> Node(minimum, l, remove_min r))
+    |Node(value, left, right) -> 
+          if Ord.compare element value <= 0 then Node(value, remove element left, right)
+          else Node(value, left, remove element right) 
+  (* ToDo: </docs> *)
   
   (** 
     @param element element to look for.
