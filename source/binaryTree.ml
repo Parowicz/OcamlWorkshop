@@ -48,26 +48,26 @@ module Make (Ord: OrderedType) = struct
   let is_empty = function Empty -> true | _ -> false
 
   (** 
-    @param ele element to append.
+    @param element element to append.
     @return new tree with element appended. 
             If tree already contains given element, then same tree will be returned.
   *)
-  let rec append ele = function 
-    |Empty -> Node(ele, Empty, Empty)
-    |Node(value, l, r) -> 
-      if Ord.compare ele value <= 0 then Node(value,  append ele l, r)
-      else Node(value, l, append ele r)  
+  let rec append element = function 
+    |Empty -> Node(element, Empty, Empty)
+    |Node(value, left, right) -> 
+      if Ord.compare element value <= 0 then Node(value,  append element left, right)
+      else Node(value, left, append element right)  
   
   (** 
-    @param ele element to look for.
+    @param element element to look for.
     @return true if tree contains given element.
   *)
-  let rec contains ele = function
+  let rec contains element = function
     |Empty -> false
-    |Node(value, _, _) when value = ele -> true
-    |Node(value, l, r) ->
-      if Ord.compare ele value > 0 then contains ele r
-      else contains ele l
+    |Node(value, _, _) when value = element -> true
+    |Node(value, left, right) ->
+      if Ord.compare element value > 0 then contains element right
+      else contains element left
 
   (**
     @return list of elements from tree flattens in left-right order.
