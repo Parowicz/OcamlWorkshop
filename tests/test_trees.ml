@@ -174,3 +174,19 @@ let test_remove_not_existing_item_return_same_tree =
   T.remove 100l (T.Node(0l, T.Node(-35l, T.Empty, T.Empty), T.Node(35l, T.Empty, T.Empty)))
   |> assert_equal (T.Node(0l, T.Node(-35l, T.Empty, T.Empty), T.Node(35l, T.Empty, T.Empty)))
 ;;
+
+let test_size_empty_return_0 = 
+  T.size T.Empty 
+  |> assert_equal 0
+;;
+
+let test_size_signleton_return_1 = 
+  T.size (T.Node(5l, T.Empty, T.Empty))
+  |> assert_equal 1
+;;
+
+let test_size = 
+  T.size (T.Node(5l, T.Node(2l, T.Empty, T.Empty), 
+            T.Node(6l, T.Empty, T.Node(8l, T.Empty, T.Empty))))
+  |> assert_equal 4
+;;

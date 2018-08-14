@@ -38,6 +38,19 @@ module Make (Ord: OrderedType) = struct
     @return empty tree
   *)
   let empty = Empty
+  
+  (**
+    @return number of tree elements.
+  *)
+  let rec size = function
+    |Empty -> 0
+    |Node(_, left, right) -> 1 + size left + size right
+
+  (**
+    @param element value of the root.
+    @return tree with root only.
+  *)
+  let signleton element = Node(element, Empty, Empty)
 
   (**
     @return true if tree is not empty. 
