@@ -14,22 +14,13 @@ module type OrderedType =
 
 (** Binary tree signature. It must implement types representing single value and whole tree. *)
 module type S = sig
-  (** Type of values stored in tree. *)
   type element
-  
-  (** Type of whole tree *)
   type 'a t
 
-  (** @return empty tree *)
   val empty: 'a t
-
-  (** @return true if tree is not empty. Otherwise false. *)
   val any: 'a t -> bool
-
-  (** @return tree appended with given element. *)
   val append: element -> 'a t -> 'a t
-
-  (** @return true if tree contains given element. *)
+  val remove: element -> 'a t -> 'a t
   val contains: element -> 'a t -> bool
 end
 
@@ -43,8 +34,19 @@ module Make (Ord: OrderedType) = struct
     |Empty (** End of tree. *)  
     |Node of element * 'a t * 'a t (** Node has greater value on right side and lesser on left. *)
   
+  (**
+    @return empty tree
+  *)
   let empty = Empty
+
+  (**
+    @return true if tree is not empty. 
+  *)
   let any = function Empty -> false | _ -> true
+
+  (**
+    @return true if element is empty.
+  *)
   let is_empty = function Empty -> true | _ -> false
 
   (** 
@@ -58,42 +60,66 @@ module Make (Ord: OrderedType) = struct
       if Ord.compare element value <= 0 then Node(value, append element left, right)
       else Node(value, left, append element right)  
   
-  (* ToDo: <docs> *)
-
+  (**
+    @return tree constructed from list of elements.
+  *)
   let from_list lst = List.fold_left (fun acc a -> append a acc) empty lst
 
+  (**
+    @return rightmost element of the tree (greatest one).
+  *)
   let rec max = function
     |Empty -> None
     |Node(value, _, Empty) -> Some(value)
     |Node(_, _, right) -> max right
   
+  (**
+    Remove rightmost element from the tree (greatest one).
+    
+    @return tree without rightmost element.
+  *)
   let rec remove_max = function
     |Empty -> Empty
     |Node(_, left, Empty) -> left
     |Node(value, left, right) -> Node(value, left, remove_max right)
   
-  let rec min = function (* ToDo: tests *)
+  (**
+    @return leftmost element of the tree (smallest one).
+  *)
+  let rec min = function 
     |Empty -> None 
     |Node(value, Empty, _) -> Some(value)
     |Node(_, left, _) -> min left
   
-  let rec remove_min = function (* ToDo: tests *)
+  (**
+    Remove leftmost element from the tree (smallest one).
+
+    @return tree without leftmost element.
+  *)
+  let rec remove_min = function 
     |Empty -> Empty
-    |Node(value, Empty, right) -> right
+    |Node(_, Empty, right) -> right
     |Node(value, left, right) -> Node(value, remove_min left, right)
 
+  (**
+    Remove given element. Replace it with leftmost element in right node. 
+    If right node doesn't have left branch, then right node is used instead.
+    If removed element doesn't have right node then element is replaced by left node.
+
+    @param element to remove
+    @return tree without given element
+  *)
   let rec remove element tree = 
     match tree with 
     |Empty -> Empty
     |Node(value, left, Empty) when value = element -> left
-    |Node(value, l, r) when value = element 
-      -> (match min r with 
-          |None -> r
-          |Some(minimum) -> Node(minimum, l, remove_min r))
+    |Node(value, left, right) when value = element 
+      -> (match min right with 
+          |None -> right
+          |Some(minimum) -> Node(minimum, left, remove_min right))
     |Node(value, left, right) -> 
           if Ord.compare element value <= 0 then Node(value, remove element left, right)
           else Node(value, left, remove element right) 
-  (* ToDo: </docs> *)
   
   (** 
     @param element element to look for.
@@ -118,5 +144,4 @@ module Make (Ord: OrderedType) = struct
     @return sorted list.
   *)
   let sort lst = List.fold_right (fun tree element -> append tree element) lst empty |> flatten
-
 end

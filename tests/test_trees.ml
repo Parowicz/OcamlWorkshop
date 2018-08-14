@@ -126,6 +126,20 @@ let test_remove_max_empty_tree_remove_empty_tree =
   |> assert_equal T.Empty
 ;;
 
+let test_min_empty_tree_return_none = 
+  T.min T.Empty |> assert_equal None
+;;
+
+let test_min_signleton_return_root_value = 
+  T.min (T.Node(5l, T.Empty, T.Empty)) |> assert_equal (Some (5l))
+;;
+
+let test_min = 
+  T.min (T.Node(5l, T.Node(4l, T.Node(2l, T.Empty, T.Empty), 
+          T.Node(6l, T.Empty, T.Empty)), T.Empty))
+  |> assert_equal (Some(2l))
+;;
+
 let test_remove_element_signleton_return_empty_tree =
   T.remove 21l (T.Node(21l, T.Empty, T.Empty))
   |> assert_equal T.Empty
@@ -154,4 +168,9 @@ let test_remove_root_align_minimal =
 let test_remove_pull_right = 
   T.remove 0l (T.Node(0l, T.Empty, T.Node(1l, T.Empty, T.Node(2l, T.Empty, T.Empty))))
   |> assert_equal (T.Node(1l, T.Empty, T.Node(2l, T.Empty, T.Empty)))
+;;
+
+let test_remove_not_existing_item_return_same_tree =
+  T.remove 100l (T.Node(0l, T.Node(-35l, T.Empty, T.Empty), T.Node(35l, T.Empty, T.Empty)))
+  |> assert_equal (T.Node(0l, T.Node(-35l, T.Empty, T.Empty), T.Node(35l, T.Empty, T.Empty)))
 ;;
