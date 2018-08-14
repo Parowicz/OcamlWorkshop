@@ -190,3 +190,23 @@ let test_size =
             T.Node(6l, T.Empty, T.Node(8l, T.Empty, T.Empty))))
   |> assert_equal 4
 ;;
+
+let test_from_sorted_list = 
+  T.from_sorted_list [1l; 2l; 3l]
+  |> assert_equal (T.Node(2l, T.Node(1l, T.Empty, T.Empty), T.Node(3l, T.Empty, T.Empty)));
+
+  T.from_sorted_list [1l; 2l; 3l; 4l]
+  |> assert_equal (T.Node(3l, T.Node(2l, T.Node(1l, T.Empty, T.Empty), T.Empty), 
+                    T.Node(4l, T.Empty, T.Empty)))
+;;
+
+let test_from_sorted_list_is_balanced = 
+  let l, r = match T.from_sorted_list [1l; 2l; 3l; 4l; 5l; 6l; 7l; 8l; 10l] with
+  |T.Empty -> failwith "Returned Empty tree"
+  |T.Node(_, l, r) -> (l, r)
+  in assert_equal (T.size l) (T.size r)
+;;
+
+let test_from_sorte_list_empty_list_return_empty = 
+  T.from_sorted_list [] |> assert_equal T.Empty
+;;

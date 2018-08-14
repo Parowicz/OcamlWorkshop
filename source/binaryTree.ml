@@ -77,7 +77,18 @@ module Make (Ord: OrderedType) = struct
     @return tree constructed from list of elements.
   *)
   let from_list lst = List.fold_left (fun acc a -> append a acc) empty lst
-
+  
+  let rec from_sorted_list = function 
+    |[] -> Empty
+    |lst -> let split l =
+              let i = List.length l / 2 in
+              let rec aux acc ci = function
+                |[] -> failwith "Empty list"
+                |x :: xs when ci = i -> List.rev acc, x,  xs
+                |x :: xs -> aux (x :: acc) (ci + 1) xs
+              in aux [] 0 l
+            in let l, c, r = split lst in Node(c, from_sorted_list l, from_sorted_list r) 
+        
   (**
     @return rightmost element of the tree (greatest one).
   *)
@@ -151,7 +162,7 @@ module Make (Ord: OrderedType) = struct
   let rec flatten = function
     |Empty -> []
     |Node(value, left, right) -> flatten left @ value :: flatten right
-
+      
   (**
     @param lst list of elements with types matches tree type.
     @return sorted list.
