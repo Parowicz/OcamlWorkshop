@@ -210,3 +210,20 @@ let test_from_sorted_list_is_balanced =
 let test_from_sorte_list_empty_list_return_empty = 
   T.from_sorted_list [] |> assert_equal T.Empty
 ;;
+
+let test_balance = 
+  let l ,r = match T.balance (T.Node(5l, T.Node(2l, T.Node(1l, T.Empty, T.Empty), T.Empty), 
+                    T.Node(6l, T.Empty, T.Node(8l, T.Empty, T.Empty)))) with 
+             |T.Empty -> failwith "Returned Empty tree"
+             |T.Node(_, l, r) -> (l, r)
+             in assert_equal (T.size l) (T.size r)
+;;
+
+let test_balance_empty_return_empty = 
+  T.balance T.Empty |> assert_equal T.Empty
+;;
+
+let test_balance_singleton_return_signleton =
+  T.balance (T.Node(1l, T.Empty, T.Empty))
+  |> assert_equal (T.Node(1l, T.Empty, T.Empty))
+;;

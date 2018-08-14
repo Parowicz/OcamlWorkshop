@@ -78,6 +78,9 @@ module Make (Ord: OrderedType) = struct
   *)
   let from_list lst = List.fold_left (fun acc a -> append a acc) empty lst
   
+  (**
+    @return balanced binary tree from sorted list.
+  *)
   let rec from_sorted_list = function 
     |[] -> Empty
     |lst -> let split l =
@@ -162,7 +165,15 @@ module Make (Ord: OrderedType) = struct
   let rec flatten = function
     |Empty -> []
     |Node(value, left, right) -> flatten left @ value :: flatten right
-      
+  
+  (**
+    Balance tree by flatting it to sorted list and paring those list to tree.  
+
+    @param tree to balance.
+    @return balanced binary tree.
+  *)
+  let balance tree = flatten tree |> from_sorted_list
+
   (**
     @param lst list of elements with types matches tree type.
     @return sorted list.
