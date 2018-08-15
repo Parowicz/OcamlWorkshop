@@ -11,19 +11,35 @@ BuildTools: ocamlbuild
 Plugins: META (0.4), DevFiles (0.4)
 
 Library "BinaryTree"
-    Path: source
+    Path: source/BinaryTree
     Modules: BinaryTree
 
-Executable "test_trees"
+Executable "test_binary_tree"
     Path: tests
-    MainIs: test_trees.ml
+    MainIs: test_binary_tree.ml
     CompiledObject: best
     Install: false
     BuildDepends: BinaryTree, oUnit
 
-Test "test_trees"
-    TestTools: test_trees
-    Command: $test_trees
+Test "test_binary_tree"
+    TestTools: test_binary_tree
+    Command: $test_binary_tree
+    WorkingDirectory: tests
+
+Library "LexicalTree"
+    Path: source/LexicalTree
+    Modules: LexicalTree
+
+Executable "test_lexical_tree"
+    Path: tests
+    MainIs: test_lexical_tree.ml
+    CompiledObject: best
+    Install: false
+    BuildDepends: LexicalTree, oUnit
+
+Test "test_lexical_tree"
+    TestTools: test_lexical_tree
+    Command: $test_lexical_tree
     WorkingDirectory: tests
 
 Library "99problems"
