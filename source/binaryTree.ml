@@ -22,6 +22,7 @@ module type S = sig
   val append: element -> 'a t -> 'a t
   val remove: element -> 'a t -> 'a t
   val contains: element -> 'a t -> bool
+  val balance: 'a t -> 'a t
 end
 
 (** Create binary tree based on orderable value. *)
@@ -90,7 +91,8 @@ module Make (Ord: OrderedType) = struct
                 |x :: xs when ci = i -> List.rev acc, x,  xs
                 |x :: xs -> aux (x :: acc) (ci + 1) xs
               in aux [] 0 l
-            in let l, c, r = split lst in Node(c, from_sorted_list l, from_sorted_list r) 
+            in let left, center, right = split lst 
+               in Node(center, from_sorted_list left, from_sorted_list right) 
         
   (**
     @return rightmost element of the tree (greatest one).
