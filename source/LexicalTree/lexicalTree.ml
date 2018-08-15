@@ -1,3 +1,16 @@
+(**
+  Lexical tree is data structure well suited to work as lexical words set.
+
+  @author Artur P.
+  @version 0.0
+*)
+
+(**
+  Each Word must expose indexer to single element ane length function.
+  Assuming standard string implementation, both should be accessible in constant time.
+  Of course we can find list based implementations of string (for example Haskell), in
+  this case that module can cause performance problems.
+*)
 module type Word = sig
   type letter
   type t
@@ -23,33 +36,57 @@ module Make (W: Word) = struct
   type node = Letter of W.letter * bool * t
   and t = node list
 
+  (**
+    @return empty list
+  *)
   let empty = []
 
-  let contains w tree =
-    let len = W.length w in 
-    let rec aux i lst = 
-      let ch = W.element_at i w in 
-      let is_end = i = len - 1 in
+  (**
+    Pack word into a stream. ToDo: It could be nice to expose this in Word signature.
+    
+    @return stream iterator for word letters.
+  *)
+  let letter_stream word =
+    let len = W.length word in
+    let safe_get i = if i >= len then None else Some(W.element_at i word) in
+    Stream.from safe_get
+  
+  (**
+    @return true if given tree contains given word. 
+      If word is empty, then false will be returned.
+  *)
+  let contains word tree =
+    let stream = letter_stream word in
+    let rec aux ch lst = 
       match lst with
       |[] -> false
       |Letter(character, ends, subtree) :: _ when character = ch 
-        -> if is_end then ends else aux (i + 1) subtree
-      |_ :: xs -> aux i xs
-    in aux 0 tree
+        -> (try aux (Stream.next stream) subtree with Stream.Failure -> ends)
+      |_ :: xs -> aux ch xs
+    in try aux (Stream.next stream) tree with Stream.Failure -> false
       
-  let insert w tree =
-    let len = W.length w in 
-    let rec aux i lst = 
-      let ch = W.element_at i w in 
-      let is_end = i = len - 1 in
+  (**
+      @param word to insert 
+      @return new tree with inserted word. If word was empty or tree already contains given word,
+       then same tree will be returned.
+  *)
+  let insert word tree =
+    let stream = letter_stream word in
+    let rec aux ch lst = 
       match lst with
-      |[] -> [Letter(ch, is_end, if is_end then [] else aux (i + 1) [])]
-      |Letter(character, _, subtree) :: xs when character = ch
-        -> Letter(ch, is_end, if is_end then subtree else aux (i + 1) subtree) :: xs
-      |x :: xs -> x :: aux i xs 
-    in aux 0 tree
+      |[] -> 
+        (try [Letter(ch, false, aux (Stream.next stream) [])]
+          with Stream.Failure -> [Letter(ch, true, [])])
+      |Letter(character, ends, subtree) :: xs when character = ch
+        -> (try Letter(ch, ends, aux (Stream.next stream) subtree) 
+              with Stream.Failure -> Letter(ch, true, subtree) ) :: xs
+      |x :: xs -> x :: aux ch xs 
+    in try aux (Stream.next stream) tree with Stream.Failure -> tree
 end
 
+(**
+  String based implementation of Word. 
+*)
 module StringWord = struct
   type letter = char
   type t = string
