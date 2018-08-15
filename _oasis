@@ -66,4 +66,4 @@ Document "WorkshopReference"
     Title: Workshop reference
     XOCamlbuildPath: .
     XOCamlbuildExtraArgs: "-docflags '-colorize-code -short-functors -keep-code'"
-    XOCamlbuildLibraries: 99problems, BinaryTree
+    XOCamlbuildLibraries: 99problems, BinaryTree, LexicalTree
