@@ -36,10 +36,10 @@ let frequencies lst =
 *)
 let rec insert_node ele = function
   |[] -> [ele]
-  |(Letter(_, c) as x) :: xs | (Node(_, _, c) as x) :: xs 
+  |(Letter(_, counter) as x) :: xs | (Node(_, _, counter) as x) :: xs 
     -> match ele with 
-        Letter(_, ct) | Node(_, _, ct) 
-          -> if ct < c then ele :: x :: xs 
+        Letter(_, counter_right) | Node(_, _, counter_right) 
+          -> if counter_right < counter then ele :: x :: xs 
               else x :: insert_node ele xs
 
 (**
@@ -47,9 +47,10 @@ let rec insert_node ele = function
 *)
 let combine left_node right_node = 
   match left_node with 
-    Letter(_, ct) | Node(_, _, ct) as l 
+    Letter(_, counter_l) | Node(_, _, counter_l) as left
       -> match right_node with 
-          Letter(_, ct2) | Node(_, _, ct2) as r -> Node(l, r, ct + ct2)
+          Letter(_, counter_r) | Node(_, _, counter_r) as right
+            -> Node(left, right, counter_l + counter_r)
 
 (**
   Fold frequency table into single tree.
@@ -86,8 +87,8 @@ let build_tree str = to_list str |> frequencies |> fold_table
 *)
 let encode_tree tree = 
   let rec aux acc = function
-    |Letter(ch, _)-> [ch, List.rev acc]
-    |Node(l, r, _) -> aux (0 :: acc) l @ aux (1 :: acc) r
+    |Letter(character, _)-> [character, List.rev acc]
+    |Node(left, right, _) -> aux (0 :: acc) left @ aux (1 :: acc) right
   in aux [] tree
 
 (**
