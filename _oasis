@@ -10,6 +10,22 @@ OASISFormat: 0.4
 BuildTools: ocamlbuild
 Plugins: META (0.4), DevFiles (0.4)
 
+Library "HuffmanCoding"
+    Path: source/HuffmanCoding
+    Modules: HuffmanCoding
+
+Executable "test_huffman_coding"
+    Path: tests
+    MainIs: test_huffman_coding.ml
+    CompiledObject: best
+    Install: false
+    BuildDepends: HuffmanCoding, oUnit
+
+Test "test_huffman_coding"
+    TestTools: test_huffman_coding
+    Command: $test_huffman_coding
+    WorkingDirectory: tests
+
 Library "BinaryTree"
     Path: source/BinaryTree
     Modules: BinaryTree
@@ -66,4 +82,4 @@ Document "WorkshopReference"
     Title: Workshop reference
     XOCamlbuildPath: .
     XOCamlbuildExtraArgs: "-docflags '-colorize-code -short-functors -keep-code'"
-    XOCamlbuildLibraries: 99problems, BinaryTree, LexicalTree
+    XOCamlbuildLibraries: 99problems, BinaryTree, LexicalTree, HuffmanCoding
